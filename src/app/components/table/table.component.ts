@@ -7,7 +7,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 
 import { map } from 'rxjs/operators';
-import { from, of } from 'rxjs';
+import { from, of, forkJoin } from 'rxjs';
 
 
 
@@ -16,65 +16,90 @@ import { from, of } from 'rxjs';
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit{
+
+  
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   pokemons: any = [];
+  currentPokemonEdit: any;
+  loading: boolean = false;
 
-  aux = [
-    {
-      nombre: 'nicolas',
-      peso: 12,
-      experiencia: 12,
-      habilidad: 'comer'
-    }
-  ]
-
+  max: number;
 
   listData: MatTableDataSource<any>
   displayedColumns: string[] = ["Nombre", "Peso", "Experiencia", "Habilidad", "Acciones"]
 
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   searchKey = '';
+  
 
-  constructor(public dialog: MatDialog, private pokemonService: PokemonService) { }
+  constructor(public dialog: MatDialog, private pokemonService: PokemonService) { 
+
+  }
 
   ngOnInit() {
-    let dataApi;
-    this.pokemonService.getPokemons()
-      .subscribe(data => {
-        dataApi = data;
-        dataApi.results.forEach(element => {
-          this.getPokemon(element.url)
-        });
-        
-        this.listData = new MatTableDataSource(this.pokemons);
-        this.listData.sort = this.sort;
-        this.listData.paginator = this.paginator;
+    this.loading = true;
+    this.pokemonService.getPokemonsAPI().subscribe(result => {
+        this.listarPokemons(result)
 
       })
+  }
+  
 
+  listarPokemons(data){
+    let lista_pokemons = data.results;
+    let poke_lista = [];
+    
+    for(let i of lista_pokemons){
+      let obs_poke = this.pokemonService.getPokemonAPI(i.url)  
+      poke_lista.push(obs_poke)
+    }
+
+    // Enviamos todas las promesas o observables al forkJoin para devolver una sola emision
+    forkJoin(poke_lista).subscribe(resultado => {
+      for (const pokemon of resultado) {
+        this.pokemonService.addPokemon(pokemon)
+      }
+        this.loading = false;
+        this.updateDataSource()
+      })
   }
 
-  getPokemon(url){
-    this.pokemonService.getPokemon(url).subscribe(pokemon => {
-      
-      this.pokemons.push(pokemon)
-    })
+
+  openDialog(element?){
+    this.currentPokemonEdit = element;
+    this.onOpenDialog(this.currentPokemonEdit)
   }
 
-  openDialog(){
+  onOpenDialog(data?){
     const dialogRef = this.dialog.open(ModalComponent, {
       data: {
-        mensaje: 'Modal works!'
+        pokemon: data?data:{}
       }
     })
+   
     dialogRef.afterClosed().subscribe(result => {
       if(result){
-        console.log('Aceptado')
+        console.log(result)
+        this.updateDataSource()
       }
     })
+  }
+
+  updateDataSource(){
+    
+    this.pokemons = this.pokemonService.pokemonsJSON;
+    this.max = this.pokemonService.pokemonsJSON.length;
+    this.listData = new MatTableDataSource(this.pokemons);
+    this.listData.sort = this.sort;
+    this.listData.paginator = this.paginator;
+  }
+
+  deletePokemon(element){
+    this.pokemonService.deletePokemon(element)
+    this.updateDataSource()
   }
 
   onApplyFilter(){

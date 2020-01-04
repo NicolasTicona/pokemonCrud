@@ -24,12 +24,14 @@ import { ModalComponent } from './components/modal/modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 import { HttpClientModule } from '@angular/common/http';
+import { LoadingComponent } from './components/loading.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TableComponent,
-    ModalComponent
+    ModalComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,

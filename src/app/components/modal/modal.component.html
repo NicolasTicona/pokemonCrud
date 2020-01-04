@@ -2,21 +2,26 @@
 <h1 mat-dialog-title>Guardar/Actualizar Pokemon</h1>
 
 
-    <form [formGroup]="form" (ngSubmit)="save()" mat-form>
+    <app-loading *ngIf="loading"></app-loading>
+    <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="save()" mat-form>
 
         <div mat-dialog-content>
             <mat-form-field appearance="outline">
                 <input [errorStateMatcher]="matcher"
                         matInput formControlName="nombre" placeholder="Nombre" type="text">                             
-                <mat-error *ngIf="form.controls['nombre'].errors.required" >
+                <mat-error *ngIf="form.controls['nombre'].errors?.required" >
                     El nombre es <strong>requerido</strong>
                 </mat-error>
+                <mat-error *ngIf="form.controls['nombre'].errors?.maxlength" >
+                    El nombre es <strong>muy largo</strong> 
+                </mat-error>
+
             </mat-form-field>
             
             <mat-form-field appearance="outline">
                 <input [errorStateMatcher]="matcher"
                         matInput formControlName="peso" placeholder="Peso" type="number">
-               <mat-error *ngIf="form.controls['nombre'].errors.required" >
+               <mat-error *ngIf="form.controls['peso'].errors?.required" >
                     El peso es <strong>requerido</strong>
                 </mat-error>            
             </mat-form-field>
@@ -24,20 +29,27 @@
             <mat-form-field appearance="outline">
                 <input [errorStateMatcher]="matcher"
                         matInput formControlName="experiencia" placeholder="Nivel de experiencia" type="number">
-               <mat-error *ngIf="form.controls['nombre'].errors.required" >
+               <mat-error *ngIf="form.controls['experiencia'].errors?.required" >
                     El nivel de experiencia es <strong>requerido</strong>
                 </mat-error>                 
+                <mat-error *ngIf="form.controls['experiencia'].errors?.min || form.controls['experiencia'].errors?.max" >
+                    La experiencia debe ser mayor a <strong>1</strong> y menor a <strong>200</strong>
+                </mat-error>
             </mat-form-field>
             
             <mat-form-field appearance="outline">
                 <mat-select [errorStateMatcher]="matcher" 
-                            formControlName="habilidad" placeholder="Escoge tu habilidad" type="text">
-                    <mat-option value="1">1</mat-option>
-                    <mat-option value="2">2</mat-option>
+                            formControlName="habilidad"
+                            placeholder="Escoge tu habilidad" type="text">
+                    <mat-option 
+                                *ngFor="let habilidad of habilidades"
+                                [value]="habilidad.name"
+                                > {{habilidad.name}} </mat-option>
                 </mat-select>
-               <mat-error *ngIf="form.controls['habilidad'].errors.required" >
+               <mat-error *ngIf="form.controls['habilidad'].errors?.required" >
                     La habilidad es <strong>requerida</strong>
-                </mat-error>                 
+                </mat-error>   
+                              
             </mat-form-field>   
             
         </div>
