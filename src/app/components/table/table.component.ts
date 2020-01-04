@@ -6,10 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 
-import { map } from 'rxjs/operators';
-import { from, of, forkJoin } from 'rxjs';
-
-
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-table',
@@ -19,7 +16,7 @@ import { from, of, forkJoin } from 'rxjs';
 export class TableComponent implements OnInit{
 
   
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   pokemons: any = [];
@@ -43,7 +40,6 @@ export class TableComponent implements OnInit{
     this.loading = true;
     this.pokemonService.getPokemonsAPI().subscribe(result => {
         this.listarPokemons(result)
-
       })
   }
   
