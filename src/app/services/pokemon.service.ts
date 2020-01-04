@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, from, forkJoin } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators'
-import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY } from '@angular/cdk/overlay/typings/overlay-directives';
-
 
 @Injectable({
   providedIn: 'root'
@@ -11,53 +7,37 @@ import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY } from '@angular/cdk/overlay/typi
 export class PokemonService {
 
   URL = 'https://pokeapi.co/api/v2/';
-
   currentID = 0;
-
   pokemonsJSON: object[] = [];
-
-  headers = new HttpHeaders();
   
-  constructor(private http: HttpClient) {
-    this.headers.set('Content-Type', 'application/json; charset=utf-8');
-   }
 
+
+  constructor(private http: HttpClient) {}
 
   getPokemonsAPI(): any{  
-
-    return this.http.get(this.URL+'pokemon'); 
-   
+    return this.http.get(`${this.URL}pokemon`); 
   }
 
   getPokemonAPI(element_url){
-      return this.http.get(element_url, {headers: this.headers})
+      return this.http.get(element_url)
   }
 
   addPokemon(pokemon){
     let pokemonFormated = this.formatPokemon(pokemon)
-    console.log(pokemonFormated)
-    this.pokemonsJSON.push(pokemonFormated)
-
-    console.log(this.pokemonsJSON)
+    this.pokemonsJSON.unshift(pokemonFormated)
   }
 
   editPokemon(pokemon){
-    console.log(pokemon)
     let posicion = this.pokemonsJSON.findIndex((element: any) => element.id === pokemon.id)
-
     this.pokemonsJSON[posicion] = pokemon;
   }
 
   deletePokemon(pokemon){
-    console.log(pokemon)  
     var i = this.pokemonsJSON.indexOf( pokemon );
-    
- 
+
     if ( i !== -1 ) {
         this.pokemonsJSON.splice( i, 1 );
     }
-    
-    console.log(this.pokemonsJSON)
   }
   
   getAvailableAbilities(){

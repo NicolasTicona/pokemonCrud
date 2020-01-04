@@ -15,7 +15,6 @@ styles: [`
       <mat-progress-spinner
         color="primary"
         mode="indeterminate">
-
       </mat-progress-spinner>
 
   `
