@@ -1,0 +1,56 @@
+
+<h1 mat-dialog-title>Guardar/Actualizar Pokemon</h1>
+
+
+    <form [formGroup]="form" (ngSubmit)="save()" mat-form>
+
+        <div mat-dialog-content>
+            <mat-form-field appearance="outline">
+                <input [errorStateMatcher]="matcher"
+                        matInput formControlName="nombre" placeholder="Nombre" type="text">                             
+                <mat-error *ngIf="form.controls['nombre'].errors.required" >
+                    El nombre es <strong>requerido</strong>
+                </mat-error>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline">
+                <input [errorStateMatcher]="matcher"
+                        matInput formControlName="peso" placeholder="Peso" type="number">
+               <mat-error *ngIf="form.controls['nombre'].errors.required" >
+                    El peso es <strong>requerido</strong>
+                </mat-error>            
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <input [errorStateMatcher]="matcher"
+                        matInput formControlName="experiencia" placeholder="Nivel de experiencia" type="number">
+               <mat-error *ngIf="form.controls['nombre'].errors.required" >
+                    El nivel de experiencia es <strong>requerido</strong>
+                </mat-error>                 
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline">
+                <mat-select [errorStateMatcher]="matcher" 
+                            formControlName="habilidad" placeholder="Escoge tu habilidad" type="text">
+                    <mat-option value="1">1</mat-option>
+                    <mat-option value="2">2</mat-option>
+                </mat-select>
+               <mat-error *ngIf="form.controls['habilidad'].errors.required" >
+                    La habilidad es <strong>requerida</strong>
+                </mat-error>                 
+            </mat-form-field>   
+            
+        </div>
+
+        <div mat-dialog-actions align="end">
+            <button mat-button mat-dialog-close>Cancelar</button>
+            <button 
+                [disabled]="!form.valid"
+                (click)="save()" 
+                mat-raised-button color="accent" 
+                [mat-dialog-close]="true" >
+                Aceptar</button>
+          </div>        
+    </form>
+
+
