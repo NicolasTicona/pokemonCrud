@@ -1,3 +1,4 @@
+import { SnackbarComponent } from './../../shared/snackbar.component';
 import { PokemonService } from './../../services/pokemon.service';
 import { ModalComponent } from './../modal/modal.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -113,7 +114,13 @@ export class TableComponent implements OnInit{
   }
 
   openSnackBar(message){
-    this.snackBar.open(message)
+    // this.snackBar.open(message, '', {
+    //   duration: 1000
+    // })
+
+    this.snackBar.openFromComponent(SnackbarComponent, {
+      data: message
+    })
   }
 
 }
