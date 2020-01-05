@@ -1,0 +1,19 @@
+mat-grid-list{
+    margin-bottom: 200px;
+}
+
+img{
+    width: 100%;
+}
+
+
+.pokemon-details .card{
+    width: 90%;
+    text-align: center;
+}
+
+.remove-button{
+    position: absolute;
+    top: -20px;
+    right: 0;
+}

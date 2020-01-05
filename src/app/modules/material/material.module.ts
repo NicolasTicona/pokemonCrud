@@ -16,6 +16,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatCardModule} from '@angular/material/card';
+
 
 
 
@@ -40,7 +42,8 @@ import {MatDividerModule} from '@angular/material/divider';
     MatSnackBarModule,
     MatToolbarModule,
     MatGridListModule,
-    MatDividerModule
+    MatDividerModule,
+    MatCardModule
   ]
 })
 

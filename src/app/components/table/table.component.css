@@ -24,3 +24,11 @@ table{
 .addButton{
     text-align: center;
 }
+
+.noresults{
+    width: 100%;
+}
+
+.btn-agregar{
+    background: red !important;
+}

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormGroupDirective, NgForm } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators, FormGroupDirective, NgForm } from '@angular/forms';
 
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ErrorStateMatcher } from '@angular/material/core';
@@ -32,7 +32,8 @@ export class ModalComponent implements OnInit {
 
   constructor(
               @Inject(MAT_DIALOG_DATA) public data: any,
-              private pokemonService: PokemonService 
+              private pokemonService: PokemonService,
+              private formBuilder: FormBuilder
   ) { 
     
     this.currentPokemon = data.pokemon;
@@ -47,24 +48,24 @@ export class ModalComponent implements OnInit {
       this.habilidades = resp.results;
     })
 
-    this.form = new FormGroup({
-        nombre: new FormControl(this.currentPokemon.nombre, [Validators.required, 
-                                                            Validators.maxLength(30),
-                                                            Validators.pattern(`[a-zA-Z]*`)] ),
-        peso: new FormControl(this.currentPokemon.peso, [Validators.required]),
-        experiencia: new FormControl(this.currentPokemon.experiencia, [Validators.required, 
-                                                                      Validators.min(1), 
-                                                                      Validators.max(500)] ),
-        habilidad: new FormControl(this.currentPokemon.habilidad, [Validators.required]),
+    this.form = this.formBuilder.group({
+        nombre: [this.currentPokemon.nombre, [Validators.required, 
+                                              Validators.maxLength(30),
+                                              Validators.pattern(`[a-zA-Z]*`)]],
+        peso: [this.currentPokemon.peso, [Validators.required]],
+        experiencia: [this.currentPokemon.experiencia, [Validators.required, 
+                                                        Validators.min(1), 
+                                                        Validators.max(500)] ],
+        habilidad: [this.currentPokemon.habilidad, [Validators.required]]
           
     })
 
-    // this.form.valueChanges()
+    this.form.valueChanges.subscribe(state => console.log(state))
   }
 
   saveForm(){
 
-    // Actualizar
+    // Actualizar Pokemon
     if(this.currentPokemon.id){
       let pokemon = {
         id: this.currentPokemon.id,

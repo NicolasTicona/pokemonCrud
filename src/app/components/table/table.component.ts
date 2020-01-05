@@ -1,3 +1,4 @@
+import { DetailsComponent } from './../details/details.component';
 import { SnackbarComponent } from './../../shared/snackbar.component';
 import { PokemonService } from './../../services/pokemon.service';
 import { ModalComponent } from './../modal/modal.component';
@@ -27,9 +28,10 @@ export class TableComponent implements OnInit{
 
   loading: boolean = false;
   max: number;
+  noresults: boolean = false;
 
   listData: MatTableDataSource<any>
-  displayedColumns: string[] = ["Nombre", "Peso", "Experiencia", "Habilidad", "Acciones"]
+  displayedColumns: string[] = ["Nombre", "Peso", "Experiencia", "Habilidad", "Acciones", "Equipo"]
 
 
   searchKey = '';
@@ -50,33 +52,44 @@ export class TableComponent implements OnInit{
   
 
   listarPokemons(data){
-    let lista_pokemons = data.results;
+    if(data.results){
+      let lista_pokemons = data.results;
     
-    let lista = [];
-    
-    for(let i of lista_pokemons){
-      // Regresa Observables
-      let obs_poke = this.pokemonService.getPokemonAPI(i.url)  
-      lista.push(obs_poke)
+      let lista = [];
+      
+      for(let i of lista_pokemons){
+        // Regresa Observables
+        let obs_poke = this.pokemonService.getPokemonAPI(i.url)  
+        lista.push(obs_poke)
+      }
+  
+      // Enviamos todas las promesas o observables al forkJoin para devolver una sola emision
+      forkJoin(lista).subscribe(resultado => {
+          for (const pokemon of resultado) {
+            this.pokemonService.addPokemon(pokemon)
+          }
+  
+          this.loading = false;
+          this.updateDataSource()
+        })
+    }else {
+      this.noresults = true;
+      this.loading = false;
     }
-
-    // Enviamos todas las promesas o observables al forkJoin para devolver una sola emision
-    forkJoin(lista).subscribe(resultado => {
-        for (const pokemon of resultado) {
-          this.pokemonService.addPokemon(pokemon)
-        }
-
-        this.loading = false;
-        this.updateDataSource()
-      })
   }
 
 
-  openDialog(element?){
+  openBuildDialog(element?){
     this.currentPokemonEdit = element;
     this.buildDialog(this.currentPokemonEdit)
   }
 
+  openBuildDialogDetails(element){
+    this.buildDialogDetails(element)
+  }
+
+
+  // CREACION O EDICION DE POKEMON
   buildDialog(data?){
 
     const dialogRef = this.dialog.open(ModalComponent, {
@@ -93,20 +106,65 @@ export class TableComponent implements OnInit{
       }
     })
   }
+
+  // DETALLES DE POKEMON
+  buildDialogDetails(data){
+    const dialogRef = this.dialog.open(DetailsComponent, {
+      data: {
+        pokemon: data?data:{}
+      }
+    })
+    dialogRef.disableClose = true;
+    dialogRef.afterClosed().subscribe(resp => resp) 
+   
+  }
   
   deletePokemon(element){
     this.pokemonService.deletePokemon(element)
+    this.pokemons = this.pokemonService.pokemonsJSON;
     this.updateDataSource()
     this.openSnackBar('El pokemon ha sido eliminado')
   }
 
   updateDataSource(){
-    this.pokemons = this.pokemonService.pokemonsJSON;
-    this.max = this.pokemonService.pokemonsJSON.length;
-    
-    this.listData = new MatTableDataSource(this.pokemons);
-    this.listData.sort = this.sort;
-    this.listData.paginator = this.paginator;
+    if(this.pokemonService.pokemonsJSON.length > 0){
+
+      this.noresults = false;
+      this.displayedColumns = ["Nombre", "Peso", "Experiencia", "Habilidad", "Acciones", "Equipo"]
+      this.pokemons = this.pokemonService.pokemonsJSON;
+      this.max = this.pokemonService.pokemonsJSON.length;
+      
+      this.listData = new MatTableDataSource(this.pokemons);
+      this.listData.sort = this.sort;
+      this.listData.paginator = this.paginator;
+    }
+
+    else{
+      this.noresults = true;
+      this.listData = new MatTableDataSource();
+      this.displayedColumns = []
+    }
+  }
+
+
+  addToTeam(pokemon){
+    let pokemons = JSON.parse(this.pokemonService.getMyTeamInStorage())
+ 
+    if(pokemons != null){
+      if(pokemons.length == 6){
+        this.openSnackBar('Su equipo ya esta completo')
+      }else{
+        if(this.pokemonService.verifyTeamStorage(pokemon)){
+          this.pokemonService.saveMyTeamInStorage(pokemon)
+          this.openSnackBar(`${pokemon.nombre} ahora es de tu equipo!`)
+        }else{
+          this.openSnackBar('Pokemon ya elegido!')
+        }
+      }
+    }else{
+      this.pokemonService.saveMyTeamInStorage(pokemon);
+      this.openSnackBar(`${pokemon.nombre} ahora es de tu equipo!`)
+    }
   }
 
   onApplyFilter(){
@@ -114,10 +172,6 @@ export class TableComponent implements OnInit{
   }
 
   openSnackBar(message){
-    // this.snackBar.open(message, '', {
-    //   duration: 1000
-    // })
-
     this.snackBar.openFromComponent(SnackbarComponent, {
       data: message
     })

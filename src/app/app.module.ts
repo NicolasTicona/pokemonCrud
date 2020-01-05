@@ -16,6 +16,7 @@ import { SnackbarComponent } from './shared/snackbar.component';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material';
 import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
+import { DetailsComponent } from './components/details/details.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
     LoadingComponent,
     SnackbarComponent,
     HomeComponent,
-    NavbarComponent
+    NavbarComponent,
+    DetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +37,7 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
     MaterialModule,
     RoutingModule
   ],
-  entryComponents: [ModalComponent],
+  entryComponents: [ModalComponent, DetailsComponent, SnackbarComponent],
   providers: [
     ErrorStateMatcher,
     {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2000}}
