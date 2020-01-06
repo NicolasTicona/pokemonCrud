@@ -36,13 +36,13 @@
             <!-- Nombre -->
             <ng-container matColumnDef="Nombre">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
-                <td mat-cell [id]="element.id" *matCellDef="let element">{{element.nombre}}</td>
+                <td mat-cell [id]="element.id" *matCellDef="let element">{{element.nombre | uppercase}} </td>
             </ng-container>
             
             <!-- Peso -->
             <ng-container matColumnDef="Peso">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Peso</th>
-                <td mat-cell [id]="element.id" *matCellDef="let element">{{element.peso}}</td>
+                <td mat-cell [id]="element.id" *matCellDef="let element">{{element.peso}} <small>kg</small></td>
             </ng-container>
             
             <!-- Experiencia -->
@@ -54,7 +54,7 @@
             <!-- Habilidad -->
             <ng-container matColumnDef="Habilidad">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Habilidad</th>
-                <td mat-cell [id]="element.id" *matCellDef="let element">{{element.habilidad}}</td>
+                <td mat-cell [id]="element.id" *matCellDef="let element"><strong>{{element.habilidad}}</strong></td>
             </ng-container>
             
             <!-- Acciones -->
@@ -104,7 +104,7 @@
             </ng-container>
             
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns;"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         
     </table>

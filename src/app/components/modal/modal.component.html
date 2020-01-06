@@ -32,7 +32,10 @@
                 <!-- Errors -->
                <mat-error *ngIf="form.controls['peso'].errors?.required" >
                     El peso es <strong>requerido</strong>
-                </mat-error>            
+                </mat-error>   
+                <mat-error *ngIf="form.controls['peso'].errors?.min || form.controls['peso'].errors?.max" >
+                    La experiencia debe ser mayor a <strong>1</strong> y menor a <strong>500</strong>
+                </mat-error>                         
             </mat-form-field>
 
 

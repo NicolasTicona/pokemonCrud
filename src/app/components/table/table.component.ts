@@ -21,7 +21,7 @@ export class TableComponent implements OnInit{
 
   
   @ViewChild(MatSort, {static: false}) sort: MatSort;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 
   pokemons: any = [];
   currentPokemonEdit: any;
@@ -122,6 +122,7 @@ export class TableComponent implements OnInit{
   deletePokemon(element){
     this.pokemonService.deletePokemon(element)
     this.pokemons = this.pokemonService.pokemonsJSON;
+    this.pokemonService.deleteMyPokemonOfStorage(element)
     this.updateDataSource()
     this.openSnackBar('El pokemon ha sido eliminado')
   }

@@ -52,7 +52,9 @@ export class ModalComponent implements OnInit {
         nombre: [this.currentPokemon.nombre, [Validators.required, 
                                               Validators.maxLength(30),
                                               Validators.pattern(`[a-zA-Z]*`)]],
-        peso: [this.currentPokemon.peso, [Validators.required]],
+        peso: [this.currentPokemon.peso, [Validators.required,
+                                          Validators.min(1),
+                                          Validators.max(500)]],
         experiencia: [this.currentPokemon.experiencia, [Validators.required, 
                                                         Validators.min(1), 
                                                         Validators.max(500)] ],
@@ -69,13 +71,16 @@ export class ModalComponent implements OnInit {
     if(this.currentPokemon.id){
       let pokemon = {
         id: this.currentPokemon.id,
+        img: this.currentPokemon.img,
         ...this.form.value};
       
       this.pokemonService.editPokemon(pokemon)
+      this.pokemonService.editMyPokemonOfStorage(pokemon)
     }
     // Crear
     else{
-      this.pokemonService.addPokemon(this.form.value)
+      // this.pokemonService.addPokemon(this.form.value)
+      this.pokemonService.addMyPokemonToStorage(this.form.value)
     }
   }
 }

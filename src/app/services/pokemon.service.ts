@@ -17,12 +17,12 @@ export class PokemonService {
 
   getPokemonsAPI(): any{  
     this.pokemonsJSON = []
-    // if(this.getMyPokemonsOfStorage()){
-    //   let pokemonsStorage = JSON.parse(this.getMyPokemonsOfStorage())
-    //   for(let pokeSt of pokemonsStorage ){
-    //     this.pokemonsJSON.push(pokeSt)
-    //   }
-    // }
+      if(this.getMyPokemonsOfStorage()){
+        let pokemonsStorage = JSON.parse(this.getMyPokemonsOfStorage())
+        for(let pokeSt of pokemonsStorage ){
+          this.pokemonsJSON.unshift(pokeSt)
+        }
+      }
 
     return this.http.get(`${this.URL}pokemon`); 
   }
@@ -32,6 +32,7 @@ export class PokemonService {
   }
 
   addPokemon(pokemon){
+    console.log(pokemon)
     let pokemonFormated = this.formatPokemon(pokemon)
    
     this.pokemonsJSON.unshift(pokemonFormated)
@@ -40,6 +41,7 @@ export class PokemonService {
   editPokemon(pokemon){
     let posicion = this.pokemonsJSON.findIndex((element: any) => element.id === pokemon.id)
     this.pokemonsJSON[posicion] = pokemon;
+
   }
 
   deletePokemon(pokemon){
@@ -50,6 +52,7 @@ export class PokemonService {
     }
   }
 
+  // POKEMONS AGREGADOS AL TEAM
   saveMyTeamInStorage(pokemon){
     if(this.getMyTeamInStorage() != null){
       let pokemonsTeam = JSON.parse(this.getMyTeamInStorage())
@@ -65,8 +68,8 @@ export class PokemonService {
 
   verifyTeamStorage(pokemon){
     if(this.getMyTeamInStorage() != null){
-      let p = JSON.parse(this.getMyTeamInStorage()).findIndex((element: any) => element.id === pokemon.id)
-
+      let p = JSON.parse(this.getMyTeamInStorage()).findIndex((element: any) => element.nombre === pokemon.nombre)
+      
       if(p !== -1){
         return false;
       }else{
@@ -74,6 +77,12 @@ export class PokemonService {
       }
     }
   }
+
+  // editPokemonTeamStorage(pokemon){
+  //   let pokemons = JSON.parse(this.getMyTeamInStorage());
+  //   let p = pokemons.findIndex((element: any) => element.id === pokemon.id)
+  
+  // }
 
   deletePokemonInStorage(pokemon){
     let pokemons = JSON.parse(this.getMyTeamInStorage())
@@ -88,21 +97,54 @@ export class PokemonService {
   }
 
 
+  // MIS POKEMONS CREADOS
+  getMyPokemonsOfStorage(){
+    return sessionStorage.getItem('misPokemones')
+  }
+
   addMyPokemonToStorage(pokemon){
+
+    console.log(pokemon)
+    
     if(this.getMyPokemonsOfStorage() != null){
       let myPokemons = JSON.parse(this.getMyPokemonsOfStorage())
-      myPokemons.push(pokemon)
+
+      let pokemonFormated = this.formatPokemon(pokemon)
+      console.log(pokemonFormated)
+      myPokemons.push(pokemonFormated)
+      
+      this.pokemonsJSON.unshift(pokemonFormated)
+      console.log(myPokemons)
       sessionStorage.setItem('misPokemones', JSON.stringify(myPokemons))
 
     }else{
       let myPokemons = [];
-      myPokemons.push(pokemon)
+      let pokemonFormated = this.formatPokemon(pokemon)
+      myPokemons.push(pokemonFormated)
+      this.pokemonsJSON.unshift(pokemonFormated)
+      console.log(myPokemons)
       sessionStorage.setItem('misPokemones', JSON.stringify(myPokemons))
     }
   }
 
-  getMyPokemonsOfStorage(){
-    return sessionStorage.getItem('misPokemones')
+  editMyPokemonOfStorage(pokemon){
+    let pokemons = JSON.parse(this.getMyPokemonsOfStorage())
+    let posicion = pokemons.findIndex((element: any) => element.id === pokemon.id)
+    if(posicion != -1){
+      pokemons[posicion] = pokemon;
+      sessionStorage.setItem('misPokemones', JSON.stringify(pokemons))
+    }
+  }
+  
+  deleteMyPokemonOfStorage(pokemon){
+    console.log(pokemon)
+    let pokemons = JSON.parse(this.getMyPokemonsOfStorage())
+    let posicion = pokemons.findIndex((element: any) => element.id === pokemon.id)
+ 
+    if(posicion != -1){
+      pokemons.splice( posicion, 1 );  
+      sessionStorage.setItem('misPokemones', JSON.stringify(pokemons))
+    }
   }
 
 
@@ -112,6 +154,18 @@ export class PokemonService {
   
   formatPokemon(pokemon) {
     this.currentID+=1;
+
+    if(this.getMyPokemonsOfStorage() != null){
+      let storagePokemons = JSON.parse(this.getMyPokemonsOfStorage());
+ 
+      for(let element of storagePokemons){
+
+        if(element.id === this.currentID){
+          
+          this.currentID++;
+        }
+      }
+    }
     
     return {
       id:             this.currentID,
