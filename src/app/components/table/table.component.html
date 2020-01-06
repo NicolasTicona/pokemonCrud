@@ -44,7 +44,24 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Peso</th>
                 <td mat-cell [id]="element.id" *matCellDef="let element">{{element.peso}} <small>kg</small></td>
             </ng-container>
+
+            <!-- <ng-container matColumnDef="Stats">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Stats</th>
+                <td mat-cell [id]="element.id" *matCellDef="let element">Stats </td>
+            </ng-container> -->
             
+            <!-- Stats -->
+            <ng-container matColumnDef="Stats">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Stats</th>
+                <td mat-cell [id]="element.id" *matCellDef="let element"> 
+                    
+                    <small *ngFor="let stat of element.stats">
+                        <i>{{stat.stat.name | resumeStat}} </i>
+                        <strong>{{stat.base_stat}}   </strong>
+                    </small>
+                </td>
+            </ng-container>
+
             <!-- Experiencia -->
             <ng-container matColumnDef="Experiencia">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Experiencia</th>
@@ -53,8 +70,13 @@
             
             <!-- Habilidad -->
             <ng-container matColumnDef="Habilidad">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Habilidad</th>
-                <td mat-cell [id]="element.id" *matCellDef="let element"><strong>{{element.habilidad}}</strong></td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Habilidades</th>
+                <td mat-cell [id]="element.id" *matCellDef="let element">
+
+                    <mat-chip-list >
+                        <mat-chip *ngFor="let habilidad of element.habilidades" color="accent" selected>{{habilidad.ability.name}}</mat-chip>
+                    </mat-chip-list>
+                </td>
             </ng-container>
             
             <!-- Acciones -->

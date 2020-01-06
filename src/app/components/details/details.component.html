@@ -13,7 +13,10 @@
             Tu pokemon pesa: <strong>{{pokemon.peso}} kg</strong>
         </p>
         <p>
-            Habilidad especial: <strong>{{pokemon.habilidad}}</strong>
+            Habilidades: 
+            <strong *ngFor="let habilidad of pokemon.habilidades" >
+                {{habilidad.ability.name}}
+            </strong>
         </p>
     </div>
     

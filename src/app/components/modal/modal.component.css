@@ -1,3 +1,8 @@
 mat-form-field{
     width: 100%;
 }
+
+.primary{
+    background: #e91e63;
+    color: white
+}

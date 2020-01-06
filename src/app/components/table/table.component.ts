@@ -10,6 +10,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 
+import { ResumeStatPipe } from '../../pipes/resume-stat.pipe';
+
+
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -31,7 +34,7 @@ export class TableComponent implements OnInit{
   noresults: boolean = false;
 
   listData: MatTableDataSource<any>
-  displayedColumns: string[] = ["Nombre", "Peso", "Experiencia", "Habilidad", "Acciones", "Equipo"]
+  displayedColumns: string[] = ["Nombre", "Peso", "Stats", "Experiencia", "Habilidad", "Acciones", "Equipo"]
 
 
   searchKey = '';
@@ -46,6 +49,7 @@ export class TableComponent implements OnInit{
     this.loading = true;
 
     this.pokemonService.getPokemonsAPI().subscribe(data => {
+      
         this.listarPokemons(data)
     })
   }
@@ -54,7 +58,6 @@ export class TableComponent implements OnInit{
   listarPokemons(data){
     if(data.results){
       let lista_pokemons = data.results;
-    
       let lista = [];
       
       for(let i of lista_pokemons){
@@ -65,6 +68,7 @@ export class TableComponent implements OnInit{
   
       // Enviamos todas las promesas o observables al forkJoin para devolver una sola emision
       forkJoin(lista).subscribe(resultado => {
+
           for (const pokemon of resultado) {
             this.pokemonService.addPokemon(pokemon)
           }
@@ -131,7 +135,7 @@ export class TableComponent implements OnInit{
     if(this.pokemonService.pokemonsJSON.length > 0){
 
       this.noresults = false;
-      this.displayedColumns = ["Nombre", "Peso", "Experiencia", "Habilidad", "Acciones", "Equipo"]
+      this.displayedColumns = ["Nombre", "Peso", "Stats", "Experiencia", "Habilidad", "Acciones", "Equipo"]
       this.pokemons = this.pokemonService.pokemonsJSON;
       this.max = this.pokemonService.pokemonsJSON.length;
       

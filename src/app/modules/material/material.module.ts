@@ -17,8 +17,11 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatCardModule} from '@angular/material/card';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
-
+import {MatSliderModule} from '@angular/material/slider';
 
 
 
@@ -43,7 +46,11 @@ import {MatCardModule} from '@angular/material/card';
     MatToolbarModule,
     MatGridListModule,
     MatDividerModule,
-    MatCardModule
+    MatCardModule,
+    MatChipsModule,
+    MatCheckboxModule,
+    MatExpansionModule,
+    MatSliderModule
   ]
 })
 

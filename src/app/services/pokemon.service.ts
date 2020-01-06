@@ -32,21 +32,18 @@ export class PokemonService {
   }
 
   addPokemon(pokemon){
-    console.log(pokemon)
     let pokemonFormated = this.formatPokemon(pokemon)
-   
     this.pokemonsJSON.unshift(pokemonFormated)
   }
 
   editPokemon(pokemon){
+    console.log(pokemon)
     let posicion = this.pokemonsJSON.findIndex((element: any) => element.id === pokemon.id)
     this.pokemonsJSON[posicion] = pokemon;
-
   }
 
   deletePokemon(pokemon){
     var i = this.pokemonsJSON.indexOf( pokemon );
-    console.log(i)
     if ( i !== -1 ) {
         this.pokemonsJSON.splice( i, 1 );
     }
@@ -104,17 +101,14 @@ export class PokemonService {
 
   addMyPokemonToStorage(pokemon){
 
-    console.log(pokemon)
     
     if(this.getMyPokemonsOfStorage() != null){
       let myPokemons = JSON.parse(this.getMyPokemonsOfStorage())
 
       let pokemonFormated = this.formatPokemon(pokemon)
-      console.log(pokemonFormated)
       myPokemons.push(pokemonFormated)
       
       this.pokemonsJSON.unshift(pokemonFormated)
-      console.log(myPokemons)
       sessionStorage.setItem('misPokemones', JSON.stringify(myPokemons))
 
     }else{
@@ -122,34 +116,37 @@ export class PokemonService {
       let pokemonFormated = this.formatPokemon(pokemon)
       myPokemons.push(pokemonFormated)
       this.pokemonsJSON.unshift(pokemonFormated)
-      console.log(myPokemons)
       sessionStorage.setItem('misPokemones', JSON.stringify(myPokemons))
     }
   }
 
   editMyPokemonOfStorage(pokemon){
     let pokemons = JSON.parse(this.getMyPokemonsOfStorage())
-    let posicion = pokemons.findIndex((element: any) => element.id === pokemon.id)
-    if(posicion != -1){
-      pokemons[posicion] = pokemon;
-      sessionStorage.setItem('misPokemones', JSON.stringify(pokemons))
+    if(pokemons){
+      console.log(pokemon)
+      let posicion = pokemons.findIndex((element: any) => element.id === pokemon.id)
+      if(posicion != -1){
+        pokemons[posicion] = pokemon;
+        sessionStorage.setItem('misPokemones', JSON.stringify(pokemons))
+      }
     }
   }
   
   deleteMyPokemonOfStorage(pokemon){
-    console.log(pokemon)
     let pokemons = JSON.parse(this.getMyPokemonsOfStorage())
-    let posicion = pokemons.findIndex((element: any) => element.id === pokemon.id)
+    if(pokemons){
+      let posicion = pokemons.findIndex((element: any) => element.id === pokemon.id)
  
-    if(posicion != -1){
-      pokemons.splice( posicion, 1 );  
-      sessionStorage.setItem('misPokemones', JSON.stringify(pokemons))
+      if(posicion != -1){
+        pokemons.splice( posicion, 1 );  
+        sessionStorage.setItem('misPokemones', JSON.stringify(pokemons))
+      }
     }
   }
 
 
   getAvailableAbilities(){
-    return this.http.get(`${this.URL}ability`)
+    return this.http.get(`${this.URL}ability?offset=0&limit=200`)
   }
   
   formatPokemon(pokemon) {
@@ -169,12 +166,13 @@ export class PokemonService {
     
     return {
       id:             this.currentID,
-      selected:       false,
       nombre          : pokemon.name || pokemon.nombre,
       experiencia     : pokemon.base_experience || pokemon.experiencia,
       peso            : pokemon.weight || pokemon.peso,
-      habilidad       : pokemon.habilidad || pokemon.abilities[0].ability.name,
-      img             : pokemon.sprites?pokemon.sprites["front_default"]:'assets/img/pokeball.jpg'
+      habilidades     : pokemon.habilidades || pokemon.abilities,
+      img             : pokemon.sprites?pokemon.sprites["front_default"]:'assets/img/pokeball.jpg',
+      stats           : pokemon.stats
+
     };
   }
   

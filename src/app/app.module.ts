@@ -17,6 +17,8 @@ import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material';
 import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { DetailsComponent } from './components/details/details.component';
+import { ResumeStatPipe } from './pipes/resume-stat.pipe';
+import { ListComponent } from './componenets/list/list.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { DetailsComponent } from './components/details/details.component';
     SnackbarComponent,
     HomeComponent,
     NavbarComponent,
-    DetailsComponent
+    DetailsComponent,
+    ResumeStatPipe,
+    ListComponent
   ],
   imports: [
     BrowserModule,
