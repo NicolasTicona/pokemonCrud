@@ -1,26 +1,9 @@
 
 
-
 <!-- Botones de Search y Crear -->
-<div class="botones">
-    <mat-form-field>
-        <input 
-            [(ngModel)]="searchKey"
-            (keyup)="onApplyFilter()"
-            matInput
-            placeholder="Buscar un pokemon"
-            type="text">
-        <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
 
-    <button 
-        (click)="openBuildDialog()"
-        class="addButton" 
-        mat-fab 
-        color="primary" >
-        <mat-icon>add</mat-icon
-    ></button>
-</div>
+<app-actions (actualizar)="updateDataSource()" ></app-actions>
+<!-- <h1>{{searchKey}}</h1> -->
 
 <div class="cont-table mat-elevation-z8">
 

@@ -18,7 +18,9 @@ import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { DetailsComponent } from './components/details/details.component';
 import { ResumeStatPipe } from './pipes/resume-stat.pipe';
-import { ListComponent } from './componenets/list/list.component';
+import { PokemonsComponent } from './components/pokemons/pokemons.component';
+import { ListComponent } from './components/list/list.component';
+import { ActionsComponent } from './components/actions/actions.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { ListComponent } from './componenets/list/list.component';
     NavbarComponent,
     DetailsComponent,
     ResumeStatPipe,
-    ListComponent
+    PokemonsComponent,
+    ListComponent,
+    ActionsComponent
   ],
   imports: [
     BrowserModule,

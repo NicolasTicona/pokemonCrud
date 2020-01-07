@@ -9,7 +9,6 @@ export class PokemonService {
   URL = 'https://pokeapi.co/api/v2/';
   currentID = 0;
   pokemonsJSON: object[] = [];
-  
 
 
   constructor(private http: HttpClient) {}
@@ -33,7 +32,8 @@ export class PokemonService {
 
   addPokemon(pokemon){
     let pokemonFormated = this.formatPokemon(pokemon)
-    this.pokemonsJSON.unshift(pokemonFormated)
+    this.pokemonsJSON.push
+    (pokemonFormated)
   }
 
   editPokemon(pokemon){
@@ -74,12 +74,6 @@ export class PokemonService {
       }
     }
   }
-
-  // editPokemonTeamStorage(pokemon){
-  //   let pokemons = JSON.parse(this.getMyTeamInStorage());
-  //   let p = pokemons.findIndex((element: any) => element.id === pokemon.id)
-  
-  // }
 
   deletePokemonInStorage(pokemon){
     let pokemons = JSON.parse(this.getMyTeamInStorage())

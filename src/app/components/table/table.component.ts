@@ -1,3 +1,4 @@
+import { FilterService } from './../../services/filter.service';
 import { DetailsComponent } from './../details/details.component';
 import { SnackbarComponent } from './../../shared/snackbar.component';
 import { PokemonService } from './../../services/pokemon.service';
@@ -23,7 +24,7 @@ import { forkJoin } from 'rxjs';
 export class TableComponent implements OnInit{
 
   
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 
   pokemons: any = [];
@@ -42,20 +43,32 @@ export class TableComponent implements OnInit{
   constructor(
             public dialog: MatDialog, 
             private pokemonService: PokemonService,
-            private snackBar: MatSnackBar
+            private snackBar: MatSnackBar,
+            private filterService: FilterService
   ){ }
 
   ngOnInit() {
     this.loading = true;
 
+    this.filterService.currentMessage.subscribe(message => {
+      this.searchKey = message.trim().toLocaleLowerCase()
+
+      this.listData = new MatTableDataSource(this.pokemons);
+      this.listData.filter = this.searchKey
+      this.listData.sort = this.sort;
+      this.listData.paginator = this.paginator;
+    })
+    
     this.pokemonService.getPokemonsAPI().subscribe(data => {
       
         this.listarPokemons(data)
+    
     })
   }
   
 
   listarPokemons(data){
+    
     if(data.results){
       let lista_pokemons = data.results;
       let lista = [];
@@ -72,9 +85,12 @@ export class TableComponent implements OnInit{
           for (const pokemon of resultado) {
             this.pokemonService.addPokemon(pokemon)
           }
-  
+
           this.loading = false;
+          
+          this.listData = new MatTableDataSource(this.pokemons);
           this.updateDataSource()
+          
         })
     }else {
       this.noresults = true;
@@ -139,15 +155,29 @@ export class TableComponent implements OnInit{
       this.pokemons = this.pokemonService.pokemonsJSON;
       this.max = this.pokemonService.pokemonsJSON.length;
       
+      this.listData = null;
       this.listData = new MatTableDataSource(this.pokemons);
+      this.listData.filter = this.searchKey
       this.listData.sort = this.sort;
       this.listData.paginator = this.paginator;
+      console.log(this.listData)
+
     }
 
     else{
       this.noresults = true;
-      this.listData = new MatTableDataSource();
+     
+      this.listData = null;
+      this.listData = new MatTableDataSource(this.pokemons);
+   
+           
+      this.listData.filter = this.searchKey
+      this.listData.sort = this.sort;
+      this.listData.paginator = this.paginator;
+      console.log(this.listData)
       this.displayedColumns = []
+    
+      console.log(this.listData)
     }
   }
 
@@ -172,9 +202,9 @@ export class TableComponent implements OnInit{
     }
   }
 
-  onApplyFilter(){
-    this.listData.filter = this.searchKey.toLocaleLowerCase()
-  }
+  // onApplyFilter(){
+  //   this.listData.filter = this.searchKey.toLocaleLowerCase()
+  // }
 
   openSnackBar(message){
     this.snackBar.openFromComponent(SnackbarComponent, {

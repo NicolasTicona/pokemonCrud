@@ -1,0 +1,41 @@
+<app-actions></app-actions>
+
+<mat-grid-list *ngIf="!loading" cols="3" rowHeight="600px">
+
+       <!-- Loading -->
+       <app-loading *ngIf="loading"></app-loading>
+    
+       <!-- NoResults -->
+       <img class="noresults" *ngIf="noresults" src="assets/img/noresults.png" alt="">
+   
+
+    <mat-grid-tile 
+                colspan=1
+                *ngFor="let pokemon of pokemons; i as index">
+
+        <mat-card [id]="pokemon.id" class="card mat-elevation-z2" >
+            <mat-card-title > {{pokemon.nombre | uppercase}} </mat-card-title>
+            <img [src]="pokemon.img" alt="">
+            <mat-card-content>
+              <p>Nivel de Experiencia: <strong>{{pokemon.experiencia}} xp </strong></p>
+              <p>
+                  Tu pokemon pesa: <strong>{{pokemon.peso}} kg</strong>
+              </p>
+              <p>Habilidades</p>
+              <mat-chip-list >
+                <mat-chip *ngFor="let habilidad of pokemon.habilidades" color="accent" selected>{{habilidad.ability.name}}</mat-chip>
+             </mat-chip-list>
+
+            </mat-card-content>
+
+            <mat-card-actions>
+                <button (click)="openBuildDialog(pokemon)" mat-button color="accent" >Editar</button>
+                <button (click)="deletePokemon(pokemon)" mat-button color="warn">Eliminar</button>
+            </mat-card-actions>
+
+        </mat-card>
+
+    </mat-grid-tile>
+
+
+</mat-grid-list>

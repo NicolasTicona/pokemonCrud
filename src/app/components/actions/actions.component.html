@@ -1,0 +1,22 @@
+
+
+<div class="botones">
+
+    <mat-form-field>
+        <input 
+            [(ngModel)]="searchKey"
+            (keyup)="updateKey()"
+            matInput
+            placeholder="Buscar un pokemon"
+            type="text">
+        <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <button 
+        (click)="openBuildDialog()"
+        class="addButton" 
+        mat-fab 
+        color="primary" >
+        <mat-icon>add</mat-icon>
+    </button>
+</div>
