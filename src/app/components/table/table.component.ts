@@ -182,7 +182,7 @@ export class TableComponent implements OnInit{
   }
 
 
-  addToTeam(pokemon){
+  addToTeam(pokemon, event){
     let pokemons = JSON.parse(this.pokemonService.getMyTeamInStorage())
  
     if(pokemons != null){
